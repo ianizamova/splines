@@ -62,10 +62,13 @@ point_vec HermitSpline::findIntersection(const HermitSpline& other_spline)
 	{
 		// на каждом отрезке решаем уравнение для определения точек пересечения (методом итераций)
 		// сначала найти коэффициенты сплайнов
-		double d = coeffsA[i].a0 - coeffsB[i].a0;
-		double c = coeffsA[i].a1 - coeffsB[i].a1;
-		double b = coeffsA[i].a2 - coeffsB[i].a2;
-		double a = coeffsA[i].a3 - coeffsB[i].a3;
+		// TODO написать для этой структуры опреатор-
+		hermitSplineCoeffs razn = coeffsA[i] - coeffsB[i];
+
+		double d = razn.a0_;
+		double c = razn.a1_;
+		double b = razn.a2_;
+		double a = razn.a3_;
 
 		// заполняем вектор точек пересечения
 		// если такие точки нашлись
@@ -75,7 +78,9 @@ point_vec HermitSpline::findIntersection(const HermitSpline& other_spline)
 		if (w[i] < 1 && w[i] > 0)
 		{
 			double t = rv1[i].t + (rv1[i + 1].t - rv1[i].t)*w[i];
-
+			double r_t = a*w[i] * w[i] * w[i] + b*w[i] * w[i] + c*w[i] + d;
+			
+			// TODO сделать нормальный вывод
 			std::cout << "Intersection point is found" << std::endl;
 			std::cout << "t " << i << " = " << t << std::endl;
 
@@ -84,13 +89,9 @@ point_vec HermitSpline::findIntersection(const HermitSpline& other_spline)
 			std::cout << "c = " << a << std::endl;
 			std::cout << "d = " << a << std::endl;
 
-			double r_t = a*w[i] * w[i] * w[i] + b*w[i] * w[i] + c*w[i] + d;
 			std::cout << "r(t) = " << r_t << std::endl;
 
 		} 
-
-
-
 	}
 
 	return v;
@@ -110,10 +111,11 @@ radius_vector HermitSpline::findClosestPoints(HermitSpline other_spline)
 	{
 		std::vector<double> w_min;
 		// TODO написать операторы арифметических действий
-		a = coeffsA[i].a0 - coeffsB[i].a0;
-		b = coeffsA[i].a1 - coeffsB[i].a1;
-		c = coeffsA[i].a2 - coeffsB[i].a2;
-		d = coeffsA[i].a3 - coeffsB[i].a3;
+		hermitSplineCoeffs rz = coeffsA[i] - coeffsB[i];
+		a = rz.a0_; 
+		b = rz.a1_; 
+		c = rz.a2_; 
+		d = rz.a3_; 
 
 		std::vector<double> r = solveQuadraticEq(3 * d, 2 * c, b);
 
@@ -140,11 +142,25 @@ radius_vector HermitSpline::findClosestPoints(HermitSpline other_spline)
 				double r = d*w_i*w_i*w_i + c*w_i*w_i + b*w_i + a;
 				double t = GetCurve()[i].t + w_i * (GetCurve()[i + 1].t - GetCurve()[i].t);
 				rv.push_back({ t, r });
-				std::cout << "\n Closest points: t = " << t << " r = " << r << std::endl;
+				//std::cout << "\n Closest points: t = " << t << " r = " << r << std::endl;
 			}
 		}
 
 	}
+
+	// поиск минимума методом пузырька
+	double r_min = rv.at(0).r;
+	double t_min = rv.at(0).t;
+
+	for (auto r_i : rv)
+	{
+		if (r_i.r < r_min)
+		{
+			r_min = r_i.r;
+		}
+	}
+	std::cout << "\n Closest point: t = " << t_min << " r = " << r_min << std::endl;
+
 	return rv;
 	// теперь из этого вектора надо найти минимальное значение для расстояния
 }
