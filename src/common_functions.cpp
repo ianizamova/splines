@@ -1,4 +1,5 @@
 ﻿#include "common_functions.h"
+#include <math.h>
 
 // ещё надо написать про решение квадратного уравнения
 std::vector<double> solveQuadraticEq(double A, double B, double C)

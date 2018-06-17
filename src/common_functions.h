@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include <vector>
-#include <math.h>
+
 
 // некие общие функции, которые должны быть вне классов
 
