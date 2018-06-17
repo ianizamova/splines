@@ -72,11 +72,25 @@ point_vec HermitSpline::findIntersection(const HermitSpline& other_spline)
 		w.push_back(f_splineIntersection(a, b, c, d));
 
 		// теперь найти соответствующее время
+		if (w[i] < 1 && w[i] > 0)
+		{
+			double t = rv1[i].t + (rv1[i + 1].t - rv1[i].t)*w[i];
 
-		double t = rv1[i].t + (rv1[i + 1].t - rv1[i].t)*w[i];
+			std::cout << "Intersection point is found" << std::endl;
+			std::cout << "t " << i << " = " << t << std::endl;
 
-		std::cout << "t " << i << " = " << t << std::endl;
-		// и соответствующие точки на графике
+			std::cout << "a = " << a << std::endl;
+			std::cout << "b = " << a << std::endl;
+			std::cout << "c = " << a << std::endl;
+			std::cout << "d = " << a << std::endl;
+
+			double r_t = a*w[i] * w[i] * w[i] + b*w[i] * w[i] + c*w[i] + d;
+			std::cout << "r(t) = " << r_t << std::endl;
+
+		} 
+
+
+
 	}
 
 	return v;
