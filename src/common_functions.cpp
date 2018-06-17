@@ -21,9 +21,9 @@ std::vector<double> solveQuadraticEq(double A, double B, double C)
 		}
 		else
 		{
-			x = (-B + sqrt(D)) / (2 * A);
+			x = (-B + std::sqrt(D)) / (2 * A);
 			roots.push_back(x);
-			x = (-B - sqrt(D)) / (2 * A);
+			x = (-B - std::sqrt(D)) / (2 * A);
 			roots.push_back(x);
 		}
 	}
@@ -61,7 +61,7 @@ double f_splineIntersection(double a, double b, double c, double d)
 
 		iter_num++;
 		if (iter_num == iter_max) return w;
-		if (abs(w1 - w) <= eps) return w;
+		if (std::abs(w1 - w) <= eps) return w;
 		w = w1;
 	}
 
