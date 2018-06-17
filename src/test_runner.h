@@ -8,36 +8,9 @@
 #include <map>
 #include <vector>
 
-using namespace std;
-
-//template<class T, class U>
-//bool operator==(const pair<T, U> p1, const pair<T, U> p2)
-//{
-//	return ((p1.first == p2.first) && (p1.second == p2.second));
-//}
-//
-//template<class T, class U>
-//bool operator!=(const pair<T, U> p1, const pair<T, U> p2)
-//{
-//	return !((p1.first == p2.first) && (p1.second == p2.second));
-//}
 
 template <class T>
-ostream& operator << (ostream& os, const set<T>& s) {
-	os << "{";
-	bool first = true;
-	for (const auto& x : s) {
-		if (!first) {
-			os << ", ";
-		}
-		first = false;
-		os << x;
-	}
-	return os << "}";
-};
-
-template <class T>
-ostream& operator << (ostream& os, const vector<T>& v) {
+std::ostream& operator << (std::ostream& os, const std::vector<T>& v) {
 	os << "[";
 	bool first = true;
 	for (const auto& x : v) {
@@ -51,7 +24,7 @@ ostream& operator << (ostream& os, const vector<T>& v) {
 };
 
 template <class K, class V>
-ostream& operator << (ostream& os, const map<K, V>& m) {
+std::ostream& operator << (std::ostream& os, const std::map<K, V>& m) {
 	os << "{";
 	bool first = true;
 	for (const auto& kv : m) {
@@ -65,35 +38,35 @@ ostream& operator << (ostream& os, const map<K, V>& m) {
 };
 
 template<class T, class U>
-void AssertEqual(const T& t, const U& u, const string& hint)
+void AssertEqual(const T& t, const U& u, const std::string& hint)
 {
 	if (t != u) {
-		ostringstream os;
+		std::ostringstream os;
 		os << "Assertion failed: ---" << t << "+++ != ---" << u
 			<< "+++ hint: " << hint;
-		throw runtime_error(os.str());
+		throw std::runtime_error(os.str());
 	}
 };
 
 template<class T, class U>
-void AssertEqual(const vector<T>& vt, const vector<U>& vu, const string& hint)
+void AssertEqual(const std::vector<T>& vt, const std::vector<U>& vu, const std::string& hint)
 {
 	if (vt != vu) {
-		ostringstream os;
+		std::ostringstream os;
 		os << "Assertion failed: " << vt << " != " << vu
 			<< " hint: " << hint;
-		throw runtime_error(os.str());
+		throw std::runtime_error(os.str());
 	}
 };
 
 template<class T, class U>
-void AssertEqual(const pair<T,U>& p1, const pair<T,U>& p2, const string& hint)
+void AssertEqual(const std::pair<T,U>& p1, const std::pair<T,U>& p2, const std::string& hint)
 {
 	if (!(p1 == p2)) {
-		ostringstream os;
+		std::ostringstream os;
 		os << "Assertion failed: " << p1 << " != " << p2
 			<< " hint: " << hint;
-		throw runtime_error(os.str());
+		throw std::runtime_error(os.str());
 	}
 };
 
@@ -101,7 +74,7 @@ void AssertEqual(const pair<T,U>& p1, const pair<T,U>& p2, const string& hint)
 //
 //void AssertEqual(const vector<string>& vt, const vector<string>& vu, const string& hint);
 
-void Assert(bool b, const string& hint);
+void Assert(bool b, const std::string& hint);
 
 
 class TestRunner {
@@ -109,7 +82,7 @@ public:
 	TestRunner() {};
 
 	template <class TestFunc>
-	void RunTest(TestFunc func, const string& test_name);
+	void RunTest(TestFunc func, const std::string& test_name);
 
 	~TestRunner();
 
@@ -119,13 +92,13 @@ private:
 
 
 template <class TestFunc>
-void TestRunner::RunTest(TestFunc func, const string& test_name) {
+void TestRunner::RunTest(TestFunc func, const std::string& test_name) {
 	try {
 		func();
-		cerr << test_name << " OK" << endl;
+		std::cerr << test_name << " OK" << std::endl;
 	}
 	catch (runtime_error& e) {
 		++fail_count;
-		cerr << test_name << " fail: " << e.what() << endl;
+		std::cerr << test_name << " fail: " << e.what() << std::endl;
 	}
 }
