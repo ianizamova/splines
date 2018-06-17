@@ -97,7 +97,7 @@ void TestRunner::RunTest(TestFunc func, const std::string& test_name) {
 		func();
 		std::cerr << test_name << " OK" << std::endl;
 	}
-	catch (runtime_error& e) {
+	catch (std::runtime_error& e) {
 		++fail_count;
 		std::cerr << test_name << " fail: " << e.what() << std::endl;
 	}
