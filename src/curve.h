@@ -12,50 +12,97 @@
 // классы. самый базовый класс - кривая. Просто параметрически заданная линия, у неё есть базовые точки и  радиус-вектор r(t)
 class Curve
 {
-	parametric_line curve;
-	radius_vector r_vec;
-
+	
 	x_y_t points_;  // map
-	r_t rv_t_;  //map
+	bpoints base_points_; // vector
+	bpoints inner_grid_;
 
+	f_t x_t_, y_t_; //  отдельные х(t), y(t)
+	f_t s_t_; // расстояния между точками в (х,у)
+	std::map<size_t, std::vector<size_t>> base_to_inner;
+	std::map<size_t, size_t> inner_to_base;
 public:
 
 	Curve() {};
-	Curve(const x_y_t& points, const r_t& rv_t)
+	Curve(const bpoints& points): base_points_(points)
 	{
-		points_ = points;
-		rv_t_ = rv_t;
+		inner_grid_ = makeInnerGrid();
 	};
-
-
-	// векторы
-	parametric_line GetCurve() const
-	{
-		return curve;
-	};
-	radius_vector GetRVec() const
-	{
-		return r_vec;
-	}
 
 	//map
-	x_y_t GetPoints()
+	x_y_t GetPoints() const
 	{
 		return points_;
 	};
-	//map
-	r_t GetRvect()
+
+	bpoints GetBasePoints() const 
 	{
-		return rv_t_;
+		return base_points_;
+	}
+
+	bpoints GetInnerGrid() const
+	{
+		return inner_grid_;
 	};
 
-	// поиск пересечения с другой кривой, заданной опорными точками
-	point_vec findBasePointsIntersection(const Curve& other_curve);
-	virtual point_vec findIntersection(const Curve& other_curve);
+	f_t GetX_t() const
+	{
+		return x_t_;
+	}
+	f_t GetY_t() const
+	{
+		return y_t_;
+	}
+
+	f_t GetS_t()
+	{
+		return s_t_;
+	}
+
+	// посчитать расстояния между точками базовыми
+	void calcS_t()
+	{
+		for (size_t i = 0; i < base_points_.size() -1 ; ++i)
+		{
+			s_t_[i].first = base_points_[i].first;
+			double dx = base_points_[i + 1].second.x_ - base_points_[i].second.x_;
+			double dy = base_points_[i + 1].second.y_ - base_points_[i].second.y_;
+			s_t_[i].second = std::sqrt(dx*dx + dy*dy);
+		}
+	}
 
 	// чтение базовых точек из файла, построение кривой
 	void readBasePoints(const std::string& filename);
-	
+
+	// построением сетки по заменяющих отрезков
+	virtual bpoints makeInnerGrid();
+
+	// функции, описывающие параметрические уравнения кривой, и их производные
+	virtual double x_t(double t, size_t i)
+	{
+		return t; 
+	};
+	virtual double xdt_t(double t, size_t i)
+	{
+		return 1;
+	};
+	virtual double xdt2_t(double t, size_t i)
+	{
+		return 0;
+	};
+	virtual double y_t(double t, size_t i)
+	{
+		return t;
+	};
+	virtual double ydt_t(double t, size_t i)
+	{
+		return 1;
+	};
+	virtual double ydt2_t(double t, size_t i)
+	{
+		return 0;
+	};
+
 };
 
 

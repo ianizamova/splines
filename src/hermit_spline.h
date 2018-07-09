@@ -1,38 +1,76 @@
 ﻿#pragma once
 #include "spline_base.h"
+#include "common_functions.h"
 
 class HermitSpline : public Spline
 {
 	// коэффициенты эрмитова сплайна
-	std::vector<hermitSplineCoeffs> coeffs_;
+	vec_coeffs_herm coeffs_x_;
+	vec_coeffs_herm coeffs_y_;
 
 public:
 	HermitSpline() {};
-	HermitSpline(const std::vector<hermitSplineCoeffs>& coeffs) : coeffs_(coeffs)
+	HermitSpline(const vec_coeffs_herm& coeffs_x, const vec_coeffs_herm& coeffs_y) : coeffs_x_(coeffs_x), coeffs_y_(coeffs_y)
 	{};
 
-	HermitSpline(const std::vector<hermitSplineCoeffs>& coeffs, const x_y_t& points, const r_t& rv_t) : coeffs_(coeffs), Spline(points,rv_t)
+	HermitSpline(const vec_coeffs_herm& coeffs_x, const vec_coeffs_herm& coeffs_y, const bpoints& points) : 
+		coeffs_x_(coeffs_x), coeffs_y_(coeffs_y), Spline(points)
 	{};
 
-	std::vector<hermitSplineCoeffs> GetCoeffs() const
+	vec_coeffs_herm GetCoeffsX() const
 	{
-		return coeffs_;
+		return coeffs_x_;
+	};
+
+	vec_coeffs_herm GetCoeffsY() const
+	{
+		return coeffs_y_;
 	};
 
 	// построить эрмитов сплайн
 	void MakeSpline() override;
 
-	point_vec findIntersection(const Curve& other_curve);
+	//маленькая функция для постройки сплайна для одной функции f(t)
+	vec_coeffs_herm make_1d_hermit_spline(const f_t& x_t);
 
-	virtual point_vec findIntersection(const Spline& other_spline);
+	// построение внутренней сетки по заменяющим отрезкам
+	//virtual bpoints makeInnerGrid();
 
-	// поиск ближайших точек для двух сплайнов
-	radius_vector findClosestPoints(HermitSpline other_spline);
-
-	// найти пересечение сплайна со сплайном
-	// TODO подумать о константной ссылке, пока по значению
-
-	point_vec findIntersection(const HermitSpline& other_spline);
-
+	virtual double x_t(double t, size_t i)
+	{
+		auto coef = coeffs_x_.at(i).second;
+		double w = f_w(t, coeffs_x_.at(i).first, coeffs_x_.at(i+1).first);
+		return coef.a3_ * w*w*w + coef.a2_*w*w + coef.a1_ *w + coef.a0_;
+	};
+	virtual double xdt_t(double t, size_t i)
+	{
+		auto coef = coeffs_x_.at(i).second;
+		double w = f_w(t, coeffs_x_.at(i).first, coeffs_x_.at(i + 1).first);
+		return 3*coef.a3_*w*w + 2*coef.a2_*w + coef.a1_;
+	};
+	virtual double xdt2_t(double t, size_t i)
+	{
+		auto coef = coeffs_x_.at(i).second;
+		double w = f_w(t, coeffs_x_.at(i).first, coeffs_x_.at(i + 1).first);
+		return 6*coef.a3_ * w + 2*coef.a2_;
+	};
+	virtual double y_t(double t, size_t i)
+	{
+		auto coef = coeffs_y_.at(i).second;
+		double w = f_w(t, coeffs_x_.at(i).first, coeffs_x_.at(i + 1).first);
+		return coef.a3_ * w*w*w + coef.a2_*w*w + coef.a1_ *w + coef.a0_;
+	};
+	virtual double ydt_t(double t, size_t i)
+	{
+		auto coef = coeffs_y_.at(i).second;
+		double w = f_w(t, coeffs_x_.at(i).first, coeffs_x_.at(i + 1).first);
+		return 3 * coef.a3_*w*w + 2 * coef.a2_*w + coef.a1_;
+	};
+	virtual double ydt2_t(double t, size_t i)
+	{
+		auto coef = coeffs_y_.at(i).second;
+		double w = f_w(t, coeffs_x_.at(i).first, coeffs_x_.at(i + 1).first);
+		return 6 * coef.a3_ * w + 2 * coef.a2_;
+	};
 
 };

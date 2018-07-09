@@ -6,13 +6,17 @@ class Spline : public Curve
 
 public:
 	Spline() {};
-	Spline(const x_y_t& points, const r_t& rv_t) : Curve(points, rv_t) {};
+	Spline(const bpoints& points) : Curve(points) {};
 
 	// в этом классе не будет реализации, будут только реализации для определенных видов сплайнов
-	virtual  void MakeSpline() = 0;
-	// найти точки пересечения с параметрически заданной кривовй
-	virtual point_vec findIntersection(const Curve& other_curve) = 0;
-	// найти точки пересечения с другим сплайном
-	virtual point_vec findIntersection(const Spline& other_spline) = 0;
+	virtual  void MakeSpline() {};
+	virtual std::vector<hermitSplineCoeffs> GetCoeffs() const { return std::vector<hermitSplineCoeffs>({ { 0.0, 0.0, 0.0, 0.0 } }); };
+	
+	virtual double x_t(double t, size_t i) { return 0.0; };
+	virtual double xdt_t(double t, size_t i) { return 0.0; };
+	virtual double xdt2_t(double t, size_t i) { return 0.0; };
+	virtual double y_t(double t, size_t i) { return 0.0; };
+	virtual double ydt_t(double t, size_t i) { return 0.0; };
+	virtual double ydt2_t(double t, size_t i) { return 0.0; };
 };
 

@@ -1,5 +1,8 @@
 ﻿#include "common_functions.h"
 #include <math.h>
+#include <utility>
+#include <numeric>
+#include <limits>
 
 // ещё надо написать про решение квадратного уравнения
 std::vector<double> solveQuadraticEq(double A, double B, double C)
@@ -15,9 +18,9 @@ std::vector<double> solveQuadraticEq(double A, double B, double C)
 	{
 		D = B*B - 4 * A*C;
 		if (D < 0) return roots;
-		else if (D == 0)
+		else if (std::abs(D) <= std::numeric_limits<double>::min())
 		{
-			x = -B / (2 * A);
+			x = -B / (2.0 * A);
 			roots.push_back(x);
 		}
 		else
@@ -67,4 +70,57 @@ double f_splineIntersection(double a, double b, double c, double d)
 	}
 
 	return w1;
+}
+
+double f_w(double t, double t1, double t2)
+{
+	if (t2 - t1 != 0.0) 	return (t - t1) / (t2 - t1);
+	else return 0.0;
+}
+
+std::vector<point> findSegmentIntersection(double x1, double y1, double a1, double b1, double x2, double y2, double a2, double b2)
+{
+	std::vector<point> res;
+
+	double t1, t2;
+	double t1_chisl, t1_znam, t2_chisl, t2_znam;
+	t1_chisl = (x2 - a2)*(y1 - y2) - (x1 - x2)*(y2 - b2);
+	t1_znam = (x2 - a2)*(y1 - b1) - (x1 - a1)*(y2 - b2);
+
+	t2_chisl = (x2 - a2)*(y1 - y2) - (x1 - x2)*(y2 - b2);
+	t2_znam = (x2 - a2)*(y1 - b1) - (x1 - a1)*(y2 - b2);
+
+	if (std::abs(t1_znam) <= std::numeric_limits<double>::min() || std::abs(t2_znam) <= std::numeric_limits<double>::min()) return res;
+
+	t1 = t1_chisl / t1_znam;
+	t2 = t2_chisl / t2_znam;
+
+
+	if ((t1 >= 0.0 && t1 <= 1.0) && (t2 >= 0.0 && t2 <= 1.0))
+	{
+		double x_res, y_res;
+
+		x_res = x1*(1.0 - t1) + t1*a1;
+		y_res = y1*(1.0 - t1) + t1*b1;
+
+		res.push_back(point(x_res, y_res));
+	}
+
+	return res;
+}
+
+std::vector<point> findCurvesIntersection(const Curve& curve1, const Curve& curve2)
+{
+	std::vector<point> res;
+	//1. Loop in inner grid
+	// all functions for curve1 and curve2
+	// loop in the inner grid of curve1
+	//(auto i = 0; i < curve1.i )
+
+	bpoints igrid1 = curve1.GetInnerGrid();
+	bpoints igrid2 = curve2.GetInnerGrid();
+
+
+
+	return res;
 }
