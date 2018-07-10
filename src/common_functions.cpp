@@ -120,7 +120,29 @@ std::vector<point> findCurvesIntersection(const Curve& curve1, const Curve& curv
 	bpoints igrid1 = curve1.GetInnerGrid();
 	bpoints igrid2 = curve2.GetInnerGrid();
 
+	//inner grid of curve1
+	for (size_t i = 0; i < igrid1.size()-1; i++)
+	{
+		point p1(igrid1[i].second.x_, igrid1[i].second.y_);
+		point q1(igrid1[i+1].second.x_, igrid1[i+1].second.y_);
+		
+		// inner grid of curve2
+		for (size_t j = 0; j < igrid2.size()-1; j++)
+		{
+			// find first approximation
+			// 1. 4 points x1,y1, a1,b1, x2,y2, a2,b2
+			point p2(igrid2[j].second.x_, igrid2[j].second.y_);
+			point q2(igrid2[j + 1].second.x_, igrid2[j + 1].second.y_);
 
+			std::vector<point> first_approx = findSegmentIntersection(p1.x_, p1.y_, q1.x_, q1.y_, p2.x_, p2.y_, q2.x_, q2.y_);
+			// iteration method
+			if (first_approx.size() > 0)
+			{
+
+			}
+
+		}
+	}
 
 	return res;
 }
