@@ -71,7 +71,8 @@ int main( int argc, char* argv[])
 	// вектор для точек пересечения
 	std::vector<point> vec_intersect;
 	std::cout << "Finding intersection..." << std::endl;
-	vec_intersect = findCurvesIntersection(s1,s2);
+
+	vec_intersect = findCurvesIntersection(s1,s2, 1.0e-9);
 	std::cout << "Intersect points number = "<< vec_intersect.size() << std::endl;
 
 	std::cout << "Finding closest points..." << std::endl;

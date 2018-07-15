@@ -59,6 +59,16 @@ public:
 		return s_t_;
 	}
 
+	size_t getBaseI(size_t innerI) const
+	{
+		return inner_to_base.at(innerI);
+	};
+
+	std::vector<size_t> getInnerI(size_t baseI) const 
+	{
+		return base_to_inner.at(baseI);
+	};
+
 	// посчитать расстояния между точками базовыми
 	void calcS_t()
 	{
@@ -74,31 +84,31 @@ public:
 	// чтение базовых точек из файла, построение кривой
 	void readBasePoints(const std::string& filename);
 
-	// построением сетки по заменяющих отрезков
+	// построением сетки заменяющих отрезков
 	virtual bpoints makeInnerGrid();
 
 	// функции, описывающие параметрические уравнения кривой, и их производные
-	virtual double x_t(double t, size_t i)
+	virtual double x_t(double t, size_t i) const
 	{
 		return t; 
 	};
-	virtual double xdt_t(double t, size_t i)
+	virtual double xdt_t(double t, size_t i) const
 	{
 		return 1;
 	};
-	virtual double xdt2_t(double t, size_t i)
+	virtual double xdt2_t(double t, size_t i)  const
 	{
 		return 0;
 	};
-	virtual double y_t(double t, size_t i)
+	virtual double y_t(double t, size_t i)  const
 	{
 		return t;
 	};
-	virtual double ydt_t(double t, size_t i)
+	virtual double ydt_t(double t, size_t i)  const
 	{
 		return 1;
 	};
-	virtual double ydt2_t(double t, size_t i)
+	virtual double ydt2_t(double t, size_t i)  const
 	{
 		return 0;
 	};

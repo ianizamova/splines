@@ -20,4 +20,7 @@ double f_w(double t, double t1, double t2);
 // поиск пересечения отрезков
 std::vector<point> findSegmentIntersection(double x1, double y1, double a1, double b1, double x2, double y2, double a2, double b2);
 // поиск пересечения кривых
-std::vector<point> findCurvesIntersection(const Curve& c1, const Curve& c2);
+std::vector<point> findCurvesIntersection(const Curve& c1, const Curve& c2, double epsilon);
+// поиск пересечения двух параметрических кривых методом Ньютона
+
+point metodNewton(const Curve& curve1, const Curve& curve2, double eps, point start_point, size_t i1, size_t i2);

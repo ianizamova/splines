@@ -23,8 +23,11 @@ vec_coeffs_herm HermitSpline::make_1d_hermit_spline(const f_t& x_t)
 		s.push_back(item.second);
 	}
 
+	// зададим размер вектора
+	q.reserve(p.size());
 	//заполним нулевой элемент
 	q.push_back(0.0); 
+
 	// чтобы посчитать q, надо сначала посчитать s
 	size_t num_scheme = 0u;
 	for (size_t i = 1; i < p.size()-1; ++i)
@@ -34,7 +37,7 @@ vec_coeffs_herm HermitSpline::make_1d_hermit_spline(const f_t& x_t)
 			// простая схема
 			case 0u:
 			{
-				q[i] = (p[i + 1] - p[i-1]) / (t[i+1] - t[i-1]);
+				q.insert(next(q.begin(),i),(p[i + 1] - p[i-1]) / (t[i+1] - t[i-1]));
 			}	break;
 			// схема номер 2 с расстояниями между точками
 			// тут надо уменьшить размер контейнера
@@ -52,8 +55,9 @@ vec_coeffs_herm HermitSpline::make_1d_hermit_spline(const f_t& x_t)
 		}
 	}
 	// производная на концах
-	q[0] = 2 * (p[1] - p[0]) - q[1];
-	q[p.size() - 1] = 2 * (p[p.size() - 1] - p[p.size() - 2]) - q[p.size() - 2];
+	q.insert(q.begin(), (2 * (p[1] - p[0]) - q[1]));
+	q.erase(next(q.begin()));
+	q.insert(prev(q.end()), (2 * (p[p.size() - 1] - p[p.size() - 2]) - q[p.size() - 2]));
 	
 	for (size_t i = 0; i < p.size()-1 ; ++i)
 	{

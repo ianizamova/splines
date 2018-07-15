@@ -30,6 +30,8 @@ void Curve::readBasePoints(const std::string& filename)
 
 	// почему-то проблемы с первой строчкой, надо её удалять
 	// TODO убрать это потом, разобраться
+	inner_grid_ = makeInnerGrid();
+
 
 };
 // TODO
