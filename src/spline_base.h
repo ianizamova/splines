@@ -6,7 +6,7 @@ class Spline : public Curve
 
 public:
 	Spline() {};
-	Spline(const bpoints& points) : Curve(points) {};
+//	Spline(const bpoints& points): base_points_(points) {};
 
 	// в этом классе не будет реализации, будут только реализации для определенных видов сплайнов
 	virtual  void MakeSpline() {};

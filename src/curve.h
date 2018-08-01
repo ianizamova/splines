@@ -6,14 +6,15 @@
 #include <sstream>
 #include <vector>
 #include <map>
+#include <cmath>
 #include <utility>
 #include "structs_types.h"
 
 // классы. самый базовый класс - кривая. Просто параметрически заданная линия, у неё есть базовые точки и  радиус-вектор r(t)
 class Curve
 {
-	
-	x_y_t points_;  // map
+public:
+	//x_y_t points_;  // map
 	bpoints base_points_; // vector
 	bpoints inner_grid_;
 
@@ -23,17 +24,22 @@ class Curve
 	std::map<size_t, size_t> inner_to_base;
 public:
 
-	Curve() {};
-	Curve(const bpoints& points): base_points_(points)
-	{
-		inner_grid_ = makeInnerGrid();
-	};
 
-	//map
-	x_y_t GetPoints() const
-	{
-		return points_;
+	Curve() {
+		base_points_ = { {0.0, point(0.0, 0.0)} };
+		inner_grid_ = { { 0.0, point(0.0, 0.0) } };
+		//std::cout << "Curve is constructed!!! " << std:: endl;
 	};
+	Curve(const bpoints& points);
+//	{
+//		std::cout << "Curve is constructed!!! " << std:: endl;
+//		for (auto item: points)
+//		{
+//			std::cout << "x= " << item.second.x_ << ", y= "<< item.second.y_ <<std::endl;
+//			x_t_.push_back(std::make_pair(item.first, item.second.x_));
+//			y_t_.push_back(std::make_pair(item.first, item.second.y_));
+//		}
+//	};
 
 	bpoints GetBasePoints() const 
 	{
@@ -43,6 +49,13 @@ public:
 	bpoints GetInnerGrid() const
 	{
 		return inner_grid_;
+	};
+
+	void SetInnerGrid(const bpoints& inner_grid, const std::map<size_t, std::vector<size_t>>& btoi, const std::map<size_t, size_t>& itob)
+	{
+		inner_grid_ = inner_grid;
+		base_to_inner = btoi;
+		inner_to_base = itob;
 	};
 
 	f_t GetX_t() const
@@ -70,48 +83,22 @@ public:
 	};
 
 	// посчитать расстояния между точками базовыми
-	void calcS_t()
-	{
-		for (size_t i = 0; i < base_points_.size() -1 ; ++i)
-		{
-			s_t_[i].first = base_points_[i].first;
-			double dx = base_points_[i + 1].second.x_ - base_points_[i].second.x_;
-			double dy = base_points_[i + 1].second.y_ - base_points_[i].second.y_;
-			s_t_[i].second = std::sqrt(dx*dx + dy*dy);
-		}
-	}
+	void calcS_t();
+
 
 	// чтение базовых точек из файла, построение кривой
 	void readBasePoints(const std::string& filename);
 
 	// построением сетки заменяющих отрезков
-	virtual bpoints makeInnerGrid();
+	bpoints makeInnerGrid();
 
 	// функции, описывающие параметрические уравнения кривой, и их производные
-	virtual double x_t(double t, size_t i) const
-	{
-		return t; 
-	};
-	virtual double xdt_t(double t, size_t i) const
-	{
-		return 1;
-	};
-	virtual double xdt2_t(double t, size_t i)  const
-	{
-		return 0;
-	};
-	virtual double y_t(double t, size_t i)  const
-	{
-		return t;
-	};
-	virtual double ydt_t(double t, size_t i)  const
-	{
-		return 1;
-	};
-	virtual double ydt2_t(double t, size_t i)  const
-	{
-		return 0;
-	};
+	virtual double x_t(double t, size_t i) const =0;
+	virtual double xdt_t(double t, size_t i) const = 0; 
+	virtual double xdt2_t(double t, size_t i)  const = 0;
+	virtual double y_t(double t, size_t i)  const = 0;
+	virtual double ydt_t(double t, size_t i)  const = 0;
+	virtual double ydt2_t(double t, size_t i)  const = 0;
 
 };
 

@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <fstream>
 #include <string>
+#include <iostream>
 #include <sstream>
 #include <vector>
 #include <map>
@@ -26,6 +27,21 @@ struct hermitSplineCoeffs
 	
 };
 
+// классы для коэффициентов прямой и параболы, пригодятся для тестов
+struct straightLineCoeffs
+{
+	double k_, b_;
+	straightLineCoeffs() : k_(0), b_(0) {};
+	straightLineCoeffs(double k, double b) : k_(k), b_(b) {};
+};
+
+struct ellipsCoeffs
+{
+	double a_, b_;
+	ellipsCoeffs() : a_(0), b_(0) {};
+	ellipsCoeffs(double a, double b) : a_(a), b_(b) {};
+};
+///////////////////////////////////////////////
 
 // определим названия типов, чтобы было удобнее 
 typedef std::map<double, point> x_y_t;
@@ -35,4 +51,5 @@ typedef std::vector<std::pair<double, double>> f_t;
 typedef std::vector<std::pair<double, point>> bpoints;
 
 typedef std::vector<std::pair<double, hermitSplineCoeffs>> vec_coeffs_herm;
-
+typedef std::vector<std::pair<double, straightLineCoeffs>> vec_coeffs_straight;
+typedef std::vector<std::pair<double, ellipsCoeffs>> vec_coeffs_ellips;

@@ -3,26 +3,43 @@
 #include "structs_types.h"
 #include "hermit_spline.h"
 #include "test_runner.h"
+#include "Test_classes.h"
 
 
 
-void TestQuadraticEq()
-{
-	// 0 roots
-	AssertEqual(solveQuadraticEq(1, 1, 1).size(), 0, " 0 roots ");
-	// 1 root
-	AssertEqual(solveQuadraticEq(1, 2, 1).size(), 1, " 1 root ");
-	// 2 roots
-	AssertEqual(solveQuadraticEq(1, 3, 1).size(), 2, " 2 roots ");
-}
 
 void TestMakeSpline()
 {
-	// for direct line
-	// for parabolic line
-	// for cubic line
-	// for circle
+	// for straight line
+	{
 
+	}
+	// for ellips
+	{
+
+	}
+}
+
+void TestMakeInnerGrid()
+{
+	//straight line
+	{
+		// base points
+		bpoints bp = {
+				{0.0, {0.0, 1.0}},
+				{1.0, {1.0, 1.0}},
+				{2.0, {2.0, 1.0}},
+				{3.0, {3.0, 1.0}}
+		};
+		straightLineCoeffs c_x(1.0, 0.0);
+		straightLineCoeffs c_y(0.0, 1.0);
+		// Line object
+		TestStraightLine line(c_x, c_y, bp);
+		// проверить коэффициенты
+
+		bpoints igrid = line.makeInnerGrid();
+		AssertEqual(igrid == bp, true, "Test Inner Grid for Straight Line");
+	}
 }
 
 void TestFindIntersection()
@@ -37,26 +54,30 @@ void TestIterationMethod()
 {
 }
 
+void TestCommonFW()
+{
+	AssertEqual(f_w(1, 1, 2), 0, " case 0 ");
+	AssertEqual(f_w(1.5, 1, 2), 0.5, " case 0.5 ");
+	AssertEqual(f_w(2, 1, 2), 1, " case 1 ");
+}
+
 void TestAll()
 {
 	TestRunner tr;
 
-	tr.RunTest(TestQuadraticEq, "Test Quadratic equation");
-	tr.RunTest(TestFindIntersection, "Test find intersection");
-	tr.RunTest(TestMakeSpline, "Test Make spline");
-	tr.RunTest(TestIterationMethod, "Test Iteration method");
+	//tr.RunTest(TestMakeInnerGrid, "Test inner grid");
+	//tr.RunTest(TestFindIntersection, "Test find intersection");
+	//tr.RunTest(TestMakeSpline, "Test Make spline");
+	//tr.RunTest(TestIterationMethod, "Test Iteration method");
+	tr.RunTest(TestCommonFW, "Test Common FW");
 }
 
 
 int main( int argc, char* argv[])
 {
+	// запускаем юнит-тесты
 	TestAll();
-	// надо считать время
-	double t_min, t_max, step;
 
-	// вектор значений временных точек
-	std::vector<double> vector_t;
-	
 	// для функций, заданных параметрически, построим сплайны 
 	HermitSpline s1, s2;
 	
@@ -68,23 +89,16 @@ int main( int argc, char* argv[])
 	s1.MakeSpline();
 	s2.MakeSpline();	
 
+	std::cout << "Make inner grid..." <<std::endl;
+	s1.makeInnerGrid();
+	s2.makeInnerGrid();
+
 	// вектор для точек пересечения
 	std::vector<point> vec_intersect;
-	std::cout << "Finding intersection..." << std::endl;
+	std::cout << "Finding intersection..." << std::endl;	
 
-	vec_intersect = findCurvesIntersection(s1,s2, 1.0e-9);
+	vec_intersect = findCurvesIntersection(s1,s2, 1.0e-9, 10);
 	std::cout << "Intersect points number = "<< vec_intersect.size() << std::endl;
-
-	std::cout << "Finding closest points..." << std::endl;
-	
-//	std::cout << "Closest points number =  " << rv.size() << std::endl;
-
-	// 
-	// и теперь найдём точки пересечения или просто ближайшие точки
-	//	point_vec foundPoints = s1.findIntersection(s2);
-
-	// или в идеале - делаем функцию не-член и вызываем её от двух объектов класса Curve
-	// findIntersection(const Curve& c1, const Curve& c2);
 
 	return 0;
 }
