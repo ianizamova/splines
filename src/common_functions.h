@@ -16,13 +16,6 @@ void print_pair (const std::pair<T, U>& p);
 
 bool operator==(const point& lhs, const point& rhs);
 
-// функция для метода Ньютона
-double f_spline_coeffs(double a, double b, double c, double d, double w);
-// производная для метода Ньютона
-double fd_spline_coeffs(double a, double b, double c, double w);
-
-// будем находить пересечение двух полиномов 3 степени методом Ньютона
-double f_splineIntersection(double a, double b, double c, double d);
 // маленькая функция для получения параметра на отрезке
 double f_w(double t, double t1, double t2);
 // построение внутренней сетки
